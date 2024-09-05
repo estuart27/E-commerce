@@ -1,0 +1,4 @@
+- Separação no html do detalhes das compras 
+
+- COlocar mensagem no whatsapp add o desejo de compra do Uber 
+

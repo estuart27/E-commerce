@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Pagamento | {% endblock %}
+
+{% load omfilters %}
+{% load static %}
+
+{% block conteudo %}
+<div class="row">
+    <div class="col">
+        <h3>Escolha o método de pagamento</h3>
+        <p>Para o desenvolvedor: adicione seu método de pagamento preferido.</p>
+    </div>
+</div>
+
+{% include 'parciais/_pedido.html' %}
+
+        <div class="row mt-4">
+            <div class="col">
+                <a href="{{ whatsapp_link }}" target="_blank" class="btn btn-primary btn-block btn-lg">
+                    Fazer Pedido 
+                </a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}
