@@ -27,7 +27,7 @@ SECRET_KEY = '34s66f2twc8c&q*i_@@4i(yp7wp0-d_hi3il7%1iom55xz(87w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['vercel.app']
+ALLOWED_HOSTS = ['ecommerce-8b6ds0y5g-estuart-s-projects.vercel.app', 'localhost']
 
 
 # Application definition
@@ -96,13 +96,15 @@ WSGI_APPLICATION = 'loja.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'banco_de_dados',
-        'USER': 'meu_usuario',
-        'PASSWORD': 'estuart123040506',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'postgres',                            # Nome do banco de dados
+        'USER': 'postgres.tqcxzefejgyitlnzdncp',        # Usuário do banco (confirme se é o correto)
+        'PASSWORD': 'estuart123040506',                 # Senha correta
+        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Host do Supabase
+        'PORT': '6543',                                 # Porta confirmada como 6543
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
