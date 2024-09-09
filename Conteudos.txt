@@ -1,4 +1,6 @@
-- Separação no html do detalhes das compras 
+Name = projeto_e-commerce
 
-- COlocar mensagem no whatsapp add o desejo de compra do Uber 
+nome do banco = banco_de_dados
+
+meu_usuario
 
