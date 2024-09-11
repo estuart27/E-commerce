@@ -22,13 +22,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '34s66f2twc8c&q*i_@@4i(yp7wp0-d_hi3il7%1iom55xz(87w'
+SECRET_KEY = os.getenv('SECRET_KEY','ZTsF4pKtqwS7XBLWdYUlNfRmkw3b2xkRAHZUnb4U1SmWJkeuil4LtbPXyXFQOEeR3Cs')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['ecommerce-8b6ds0y5g-estuart-s-projects.vercel.app', 'localhost']
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://ecommerce-8b6ds0y5g-estuart-s-projects.vercel.app',
+]
 
 # Application definition
 
