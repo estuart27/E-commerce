@@ -1,19 +1,22 @@
 {
-  "version": 2,
   "builds": [
     {
-      "src": "api.py",  
-      "use": "@vercel/python"
+      "src": "api.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/static/(.*)",   
-      "dest": "/static/$1"    
-    },
-    {
       "src": "/(.*)",
-      "dest": "api.py"         
+      "dest": "api.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHONUNBUFFERED": "true"
+  },
+  "buildCommand": "python manage.py collectstatic --noinput"
 }
