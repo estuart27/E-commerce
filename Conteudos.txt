@@ -1,6 +1,0 @@
-Name = projeto_e-commerce
-
-nome do banco = banco_de_dados
-
-meu_usuario
-

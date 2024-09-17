@@ -22,17 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY','ZTsF4pKtqwS7XBLWdYUlNfRmkw3b2xkRAHZUnb4U1SmWJkeuil4LtbPXyXFQOEeR3Cs')
+SECRET_KEY = '%n&?mC4t)dK)+\?gDO!4ji)RNzSJu%_5s&#huD2PsKplm|xPsf=.kU'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ecommerce-8b6ds0y5g-estuart-s-projects.vercel.app', 'localhost']
-
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://ecommerce-8b6ds0y5g-estuart-s-projects.vercel.app',
-]
+ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -87,16 +82,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'loja.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -107,7 +92,6 @@ DATABASES = {
         'PORT': '6543',                                 # Porta confirmada como 6543
     }
 }
-
 
 
 # Password validation
@@ -172,3 +156,5 @@ SESSION_SAVE_EVERY_REQUEST = False
 
 # Serializer - Padrão JSON
 # SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
