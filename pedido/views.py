@@ -47,13 +47,7 @@ class Pagar(DispatchLoginRequiredMixin, DetailView):
             mensagem += f"pedido N°.*{pedido.id}*\n"
 
         
-        # subtotal = 100.00  # Corrigido para float
-        # frete = 20.00      # Corrigido para float
-        # total = 1000.00    # Corrigido para float
-        
-        # mensagem += f"📦 Subtotal: R$ {subtotal:.2f}\n"
-        # mensagem += f"🚚 Frete: R$ {frete:.2f} (se aplicável)\n"
-        # mensagem += f"💵 Total a Pagar: R$ {total:.2f}\n"
+
 
         # Criar o link do WhatsApp
         numero_destino = '5543996341638'  # Substitua pelo número de destino
@@ -62,15 +56,6 @@ class Pagar(DispatchLoginRequiredMixin, DetailView):
         # Adiciona o link ao contexto para uso no template
         context['whatsapp_link'] = mensagem_url
         return context
-
-
-
-    # subtotal = sum(item.preco * item.quantidade for item in itens_pedido)
-
-    
-    
-    # mensagem_url = f"https://wa.me/{numero_destino}?text={mensagem.replace(' ', '%20').replace('\n', '%0A')}"
-
 
 
 class SalvarPedido(View):
@@ -173,6 +158,7 @@ class Detalhe(DispatchLoginRequiredMixin, DetailView):
     context_object_name = 'pedido'
     template_name = 'pedido/detalhe.html'
     pk_url_kwarg = 'pk'
+    
 
 
 class Lista(DispatchLoginRequiredMixin, ListView):
