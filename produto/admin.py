@@ -1,8 +1,13 @@
 from django.contrib import admin
 from .forms import VariacaoObrigatoria
 from . import models
+from django.contrib import admin
+from .forms import VariacaoObrigatoria
+from . import models
 from django.utils.html import format_html
-
+from django.contrib import admin
+from .models import Produto
+from .forms import ProdutoForm
 
 
 class VariacaoInline(admin.TabularInline):
@@ -14,14 +19,35 @@ class VariacaoInline(admin.TabularInline):
 
 
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'descricao_curta', 'get_preco_formatado', 'get_preco_promocional_formatado', 'imagem_preview']
-    
-    def imagem_preview(self, obj):
-        if obj.imagem:
-            return format_html('<img src="{}" style="max-width: 100px; max-height: 100px;" />', obj.imagem.url)
-        return "Nenhuma imagem"
-    
-    imagem_preview.short_description = "Preview da Imagem"
+    form = ProdutoForm
+    list_display = [
+        'nome', 
+        'descricao_curta', 
+        'get_preco_formatado', 
+        'get_preco_promocional_formatado', 
+        'tipo', 
+        'category', 
+        'slug'
+    ]
+    search_fields = ['nome', 'slug']
+    list_filter = ['tipo', 'category']
+    prepopulated_fields = {'slug': ('nome',)}  # Preenche automaticamente o campo slug
+    ordering = ['nome']
+
+    inlines = [
+        VariacaoInline
+    ]
+
+
+    def get_preco_formatado(self, obj):
+        return obj.get_preco_formatado()
+    get_preco_formatado.short_description = 'Preço'
+
+    def get_preco_promocional_formatado(self, obj):
+        return obj.get_preco_promocional_formatado()
+    get_preco_promocional_formatado.short_description = 'Preço Promo.'
+
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = 'name',

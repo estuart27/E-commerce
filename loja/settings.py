@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ct-w9@c7^-m#2(^b+1^n@#o=za2h&x#=w^3zvl^)ph^pda&196'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
 
@@ -70,7 +70,7 @@ WSGI_APPLICATION = 'loja.wsgi.application'
 # Supabase Config
 SUPABASE_URL = 'https://tqcxzefejgyitlnzdncp.supabase.co'
 SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRxY3h6ZWZlamd5aXRsbnpkbmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MTgxNzQsImV4cCI6MjA0MTQ5NDE3NH0.m09ci5J3_PHObVv3U8NY2ZeMmhCQHDzLTbmGtsecvBE'
-SUPABASE_BUCKET = 'midia'  # O nome do bucket criado no Supabase Storage
+SUPABASE_BUCKET = 'media'  # O nome do bucket criado no Supabase Storage
 
 # Django-Storages Configuração
 DEFAULT_FILE_STORAGE = 'storages.backends.supabase.SupabaseStorage'  # Ajuste aqui para usar o Supabase
