@@ -1,5 +1,6 @@
 from django.contrib.messages import constants
 import os
+from supabase import create_client
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,6 +65,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'loja.wsgi.application'
+
+
+# Supabase Config
+SUPABASE_URL = 'https://tqcxzefejgyitlnzdncp.supabase.co'
+SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRxY3h6ZWZlamd5aXRsbnpkbmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MTgxNzQsImV4cCI6MjA0MTQ5NDE3NH0.m09ci5J3_PHObVv3U8NY2ZeMmhCQHDzLTbmGtsecvBE'
+SUPABASE_BUCKET = 'midia'  # O nome do bucket criado no Supabase Storage
+
+# Django-Storages Configuração
+DEFAULT_FILE_STORAGE = 'storages.backends.supabase.SupabaseStorage'  # Ajuste aqui para usar o Supabase
+SUPABASE_STORAGE_URL = SUPABASE_URL
+SUPABASE_STORAGE_KEY = SUPABASE_KEY
+SUPABASE_STORAGE_BUCKET_NAME = SUPABASE_BUCKET
+
+# Configurações de Mídia no Django
+MEDIA_URL = f'https://{SUPABASE_BUCKET}.supabase.co/storage/v1/object/public/{SUPABASE_BUCKET}/'
+
 
 
 DATABASES = {
