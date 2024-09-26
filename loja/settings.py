@@ -67,20 +67,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'loja.wsgi.application'
 
 
-# Supabase Config
+# Supabase Storage Settings
 SUPABASE_URL = 'https://tqcxzefejgyitlnzdncp.supabase.co'
 SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRxY3h6ZWZlamd5aXRsbnpkbmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MTgxNzQsImV4cCI6MjA0MTQ5NDE3NH0.m09ci5J3_PHObVv3U8NY2ZeMmhCQHDzLTbmGtsecvBE'
-SUPABASE_BUCKET = 'media'  # O nome do bucket criado no Supabase Storage
+SUPABASE_BUCKET = 'media'  # Nome do bucket criado no Supabase Storage
 
-# Django-Storages Configuração
-DEFAULT_FILE_STORAGE = 'storages.backends.supabase.SupabaseStorage'  # Ajuste aqui para usar o Supabase
+# Configuração do django-storages para Supabase
+DEFAULT_FILE_STORAGE = 'storages.backends.supabase.SupabaseStorage'
+
 SUPABASE_STORAGE_URL = SUPABASE_URL
 SUPABASE_STORAGE_KEY = SUPABASE_KEY
 SUPABASE_STORAGE_BUCKET_NAME = SUPABASE_BUCKET
 
-# Configurações de Mídia no Django
+# URL base onde seus arquivos de mídia serão acessíveis
 MEDIA_URL = f'https://{SUPABASE_BUCKET}.supabase.co/storage/v1/object/public/{SUPABASE_BUCKET}/'
-
 
 
 DATABASES = {
@@ -135,8 +135,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates/static'),  # Certifique-se de que este caminho existe e contém seus arquivos estáticos
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 MESSAGE_TAGS = {
