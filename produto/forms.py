@@ -1,12 +1,16 @@
 from django.forms.models import BaseInlineFormSet
 from django import forms
-from .models import Produto
-import requests
+from django import forms
 from django.core.exceptions import ValidationError
+from supabase import create_client, Client
+from .models import Produto  # Importe seu modelo Produto
 
-SUPABASE_URL = 'https://tqcxzefejgyitlnzdncp.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxY3h6ZWZlamd5aXRsbnpkbmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MTgxNzQsImV4cCI6MjA0MTQ5NDE3NH0.m09ci5J3_PHObVv3U8NY2ZeMmhCQHDzLTbmGtsecvBE'
-SUPABASE_BUCKET = 'media'  
+# Supabase settings
+url = "https://tqcxzefejgyitlnzdncp.supabase.co"
+key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxY3h6ZWZlamd5aXRsbnpkbmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MTgxNzQsImV4cCI6MjA0MTQ5NDE3NH0.m09ci5J3_PHObVv3U8NY2ZeMmhCQHDzLTbmGtsecvBE'
+supabase: Client = create_client(url, key)
+
+SUPABASE_BUCKET = 'media'  # Nome do bucket no Supabase Storage
 
 
 class ProdutoForm(forms.ModelForm):
@@ -21,49 +25,49 @@ class ProdutoForm(forms.ModelForm):
             'preco_marketing',
             'preco_marketing_promocional',
             'tipo',
-            'category'
+            'category',
         ]
 
-    def save(self, commit=True):
-        produto = super().save(commit=False)
+    def clean_imagem(self):
         imagem = self.cleaned_data.get('imagem')
-        
+
+        if not imagem:
+            raise ValidationError("Nenhuma imagem fornecida")
+        return imagem
+
+    def save(self, commit=True):
+        # Salva o produto normalmente primeiro, sem a imagem
+        produto = super().save(commit=False)
+
+        # Upload da imagem para o Supabase
+        imagem = self.cleaned_data.get('imagem')
+
         if imagem:
-            # URL para upload da imagem no Supabase
-            upload_url = f'{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/produto_imagens/{imagem.name}'
-            headers = {
-                "apikey": SUPABASE_KEY,
-                "Authorization": f"Bearer {SUPABASE_KEY}",
-                "Content-Type": "application/octet-stream"
-            }
+            # Carregar a imagem no Supabase
+            supabase_storage = supabase.storage().from_(SUPABASE_BUCKET)
 
-            try:
-                # Fazendo o upload da imagem
-                response = requests.post(upload_url, headers=headers, files={"file": imagem})
+            # Defina o caminho no bucket e o nome do arquivo da imagem
+            image_path = f'produtos/{imagem.name}'
 
-                # Debugging: Print da resposta para análise
-                print(f"Status Code: {response.status_code}")
-                print(f"Response Text: {response.text}")
+            # Envia a imagem para o Supabase Storage
+            response = supabase_storage.upload(image_path, imagem)
 
-                # Verificar se o upload foi bem-sucedido
-                if response.status_code != 200:
-                    # Levantar erro detalhado caso o upload falhe
-                    raise ValidationError(f"Erro ao fazer upload da imagem: {response.json()}")
+            if response['error']:
+                raise ValidationError(f"Erro ao enviar imagem para Supabase: {response['error']['message']}")
 
-                # Definir a URL da imagem no produto
-                produto.imagem_url = f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/produto_imagens/{imagem.name}"
-            
-            except requests.exceptions.RequestException as e:
-                # Tratamento de exceções de rede
-                raise ValidationError(f"Erro de rede ao fazer upload da imagem: {str(e)}")
-            except Exception as e:
-                # Tratamento de qualquer outro tipo de exceção
-                raise ValidationError(f"Erro inesperado ao fazer upload da imagem: {str(e)}")
+            # Recupera a URL pública da imagem armazenada no Supabase
+            public_url = supabase_storage.get_public_url(image_path)
 
-        # Salvar o produto se `commit` for True
+            # Salva a URL pública da imagem no campo do modelo
+            produto.imagem = public_url['data']['publicURL']
+
+        # Se commit=True, salva o objeto no banco de dados
         if commit:
             produto.save()
+
         return produto
+
+
 
 
 class VariacaoObrigatoria(BaseInlineFormSet):
@@ -72,4 +76,6 @@ class VariacaoObrigatoria(BaseInlineFormSet):
         form.empty_permitted = False
         return form
     
+
+
 
