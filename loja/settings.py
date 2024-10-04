@@ -11,7 +11,7 @@ SECRET_KEY = 'ct-w9@c7^-m#2(^b+1^n@#o=za2h&x#=w^3zvl^)ph^pda&196'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'produto',
@@ -65,22 +65,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'loja.wsgi.application'
-
-
-# Supabase Storage Settings
-SUPABASE_URL = 'https://tqcxzefejgyitlnzdncp.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRxY3h6ZWZlamd5aXRsbnpkbmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MTgxNzQsImV4cCI6MjA0MTQ5NDE3NH0.m09ci5J3_PHObVv3U8NY2ZeMmhCQHDzLTbmGtsecvBE'
-SUPABASE_BUCKET = 'media'  # Nome do bucket criado no Supabase Storage
-
-# Configuração do django-storages para Supabase
-DEFAULT_FILE_STORAGE = 'storages.backends.supabase.SupabaseStorage'
-
-SUPABASE_STORAGE_URL = SUPABASE_URL
-SUPABASE_STORAGE_KEY = SUPABASE_KEY
-SUPABASE_STORAGE_BUCKET_NAME = SUPABASE_BUCKET
-
-# URL base onde seus arquivos de mídia serão acessíveis
-MEDIA_URL = f'https://{SUPABASE_BUCKET}.supabase.co/storage/v1/object/public/{SUPABASE_BUCKET}/'
 
 
 DATABASES = {
