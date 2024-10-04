@@ -1,13 +1,6 @@
 from django.contrib import admin
-from .forms import VariacaoObrigatoria
+from .forms import VariacaoObrigatoria # Certifique-se de incluir ProdutoForm
 from . import models
-from django.contrib import admin
-from .forms import VariacaoObrigatoria
-from . import models
-from django.utils.html import format_html
-from django.contrib import admin
-from .models import Produto
-from .forms import ProdutoForm
 
 
 class VariacaoInline(admin.TabularInline):
@@ -19,7 +12,6 @@ class VariacaoInline(admin.TabularInline):
 
 
 class ProdutoAdmin(admin.ModelAdmin):
-    form = ProdutoForm
     list_display = [
         'nome', 
         'descricao_curta', 
@@ -34,10 +26,7 @@ class ProdutoAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('nome',)}  # Preenche automaticamente o campo slug
     ordering = ['nome']
 
-    inlines = [
-        VariacaoInline
-    ]
-
+    inlines = [VariacaoInline]
 
     def get_preco_formatado(self, obj):
         return obj.get_preco_formatado()
@@ -48,11 +37,11 @@ class ProdutoAdmin(admin.ModelAdmin):
     get_preco_promocional_formatado.short_description = 'Preço Promo.'
 
 
-
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = 'name',
-    ordering = '-id',
+    list_display = ['name']  # Corrija aqui se 'name' não for o campo correto
+    ordering = ['-id']  # Corrija aqui se for necessário, remove a vírgula
+
 
 admin.site.register(models.Produto, ProdutoAdmin)
 admin.site.register(models.Variacao)
-admin.site.register(models.Category)
+admin.site.register(models.Category, CategoryAdmin)  # Registrar CategoryAdmin se for usado

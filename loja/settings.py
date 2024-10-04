@@ -67,23 +67,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'loja.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',                            # Nome do banco de dados
-        'USER': 'postgres.tqcxzefejgyitlnzdncp',        # Usuário do banco (confirme se é o correto)
-        'PASSWORD': 'estuart123040506',                 # Senha correta
-        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Host do Supabase
-        'PORT': '6543',                                 # Porta confirmada como 6543
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',                            # Nome do banco de dados
+#         'USER': 'postgres.tqcxzefejgyitlnzdncp',        # Usuário do banco (confirme se é o correto)
+#         'PASSWORD': 'estuart123040506',                 # Senha correta
+#         'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Host do Supabase
+#         'PORT': '6543',                                 # Porta confirmada como 6543
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [

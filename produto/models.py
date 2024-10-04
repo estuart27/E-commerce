@@ -26,7 +26,7 @@ class Produto(models.Model):
     nome = models.CharField(max_length=255)
     descricao_curta = models.TextField(max_length=255)
     descricao_longa = models.TextField()
-    imagem = models.URLField(max_length=500, blank=True, null=True)  # Alterado para URLField
+    imagem = models.ImageField(upload_to='imagens/', blank=True, null=True)  # Altere para ImageField
     slug = models.SlugField(unique=True, blank=True, null=True)
     preco_marketing = models.FloatField(verbose_name='Preço')
     preco_marketing_promocional = models.FloatField(default=0, verbose_name='Preço Promo.')
