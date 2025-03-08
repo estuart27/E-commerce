@@ -38,9 +38,7 @@ class ProdutoAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']  # Corrija aqui se 'name' não for o campo correto
-    ordering = ['-id']  # Corrija aqui se for necessário, remove a vírgula
-
+    list_display = ('name', 'image')
 
 admin.site.register(models.Produto, ProdutoAdmin)
 admin.site.register(models.Variacao)

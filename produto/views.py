@@ -11,6 +11,19 @@ from perfil.models import Perfil
 from .models import Category
 
 
+class Index(ListView):
+    model = models.Produto
+    template_name = 'produto/index.html'
+    context_object_name = 'produtos'
+    paginate_by = 10
+    ordering = ['-id']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
 class ListaProdutos(ListView):
     model = models.Produto
     template_name = 'produto/lista.html'

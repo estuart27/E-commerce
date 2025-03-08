@@ -12,15 +12,11 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
     name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True)  # Campo de imagem
 
     def __str__(self) -> str:
         return self.name
 
-from django.db import models
-from django.utils.text import slugify
-from PIL import Image
-import os
-from django.conf import settings
 
 class Produto(models.Model):
     nome = models.CharField(max_length=255)
