@@ -1,89 +1,138 @@
 {% load static %}
 {% load omfilters %}
 
-<!-- Novo Header -->
-<div class="header-info bg-dark text-white py-2" style="font-weight: 600;">
-    <div class="container text-center">
-        <p class="mb-0">🔥 Oferta Especial: Descontos de até 50% em acessórios para motos! | Frete grátis para compras acima de R$ 150,00 🚚 | Suporte 24/7: (43) 99634-1638</p>
+
+<!-- HEADER -->
+<header>
+    <!-- TOP HEADER -->
+    <div id="top-header">
+        <div class="container">
+            <ul class="header-links pull-left">
+                <li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+                <li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
+                <li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+            </ul>
+            <ul class="header-links pull-right">
+                <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+                <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+            </ul>
+        </div>
     </div>
-</div>
+    <!-- /TOP HEADER -->
 
-
-
-<!-- Navbar existente -->
-<nav class="navbar navbar-light bg-white navbar-expand-lg shadow-sm">
-    <a class="navbar-brand" href="{% url 'produto:lista' %}">
-        <img src="{% static 'img/Logo.png' %}" alt="EstiloPronto" style="height: 80px; width: 350px;">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-            {% if request.user.is_authenticated %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    Conta
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item text-dark" href="{% url 'produto:index' %}">index</a>
-                    <a class="dropdown-item text-dark" href="{% url 'pedido:lista' %}">Meus pedidos</a>
-                    <a class="dropdown-item text-dark" href="{% url 'perfil:criar' %}">Atualizar meus dados</a>
-                    <a class="dropdown-item text-dark" href="{% url 'perfil:logout' %}">Sair</a>
+    <!-- MAIN HEADER -->
+    <div id="header">
+        <div class="container">
+            <div class="row">
+                <!-- LOGO -->
+                <div class="col-md-3">
+                    <div class="header-logo">
+                        <a href="#" class="logo">
+                            {% comment %} <img src="{% static 'img/logo.png' %}" alt="Logo"> {% endcomment %}
+                        </a>
+                    </div>
                 </div>
-            </li>
-            {% else %}
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="{% url 'perfil:criar' %}">Entrar</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="{% url 'perfil:criar' %}">Criar conta</a>
-            </li>
-            {% endif %}
+                <!-- /LOGO -->
 
-            {% if request.session.carrinho %}
-            <li class="nav-item">
-                <a class="nav-link nav-cart-link active text-dark" href="{% url 'produto:carrinho' %}">
-                    <span class="nav-cart-text mr-1">
-                        Carrinho
-                    </span>
-                    <span class="nav-cart-count mr-1">
-                        <strong>{{ request.session.carrinho|cart_total_qtd }}x</strong>
-                    </span>
-                    <span class="nav-cart-icon mr-2">
-                        <i class="fas fa-shopping-cart"></i>
-                    </span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-        <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'produto:busca' %}">
-            <input name="termo" value="{{ request.GET.termo }}" class="form-control mr-sm-2" type="search"
-                placeholder="Busca" aria-label="Busca">
-                <style>
-                    .btn-custom {
-                      background-color: #007bff; /* Azul personalizado */
-                      border: none; /* Remove a borda padrão */
-                      color: white; /* Cor do texto */
-                      font-weight: bold; /* Texto em negrito */
-                      font-size: 1.1rem; /* Tamanho da fonte */
-                      display: flex; /* Flexbox para alinhar o ícone centralizado */
-                      align-items: center; /* Alinha o ícone verticalmente */
-                      justify-content: center; /* Alinha o ícone horizontalmente */
-                    }
-                  
-                    .btn-custom:hover {
-                      background-color: #0056b3; /* Cor do botão ao passar o mouse */
-                    }
-                  </style>
-                  
-                  <button class="btn btn-custom my-2 my-sm-0" type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
-                          </form>
+                <!-- SEARCH BAR -->
+                <div class="col-md-6">
+                    <div class="header-search">
+                        <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'produto:busca' %}">
+                            <select class="input-select">
+                                <option value="0">All Categories</option>
+                                <option value="1">Category 01</option>
+                                <option value="1">Category 02</option>
+                            </select>
+                            <input class="input" name="termo" value="{{ request.GET.termo }}" placeholder="Search here">
+                            <button class="search-btn">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /SEARCH BAR -->
+
+                <!-- ACCOUNT -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+                        <!-- Wishlist -->
+                        <div>
+                            <a href="#">
+                                <i class="fa fa-heart-o"></i>
+                                <span>Favoritos</span>
+                                <div class="qty">2</div>
+                            </a>
+                        </div>
+                        <!-- /Wishlist -->
+
+                        <!-- Cart -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                {% if request.session.carrinho %}
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>Carrinho</span>
+                                <div class="qty">{{ request.session.carrinho|cart_total_qtd }}x</div>
+                                {% endif %}
+                            </a>
+                            <div class="cart-dropdown">
+                                <div class="cart-list">
+                                    <div class="product-widget">
+                                        <div class="product-img">
+                                            <img src="{% static 'img/product01.png' %}" alt="Produto">
+                                        </div>
+                                        <div class="product-body">
+                                            <h3 class="product-name"><a href="#">Nome do Produto</a></h3>
+                                            <h4 class="product-price"><span class="qty">1x</span> R$980,00</h4>
+                                        </div>
+                                        <button class="delete"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                                <div class="cart-summary">
+                                    <small>3 Item(s) selecionados</small>
+                                    <h5>SUBTOTAL: R$2940,00</h5>
+                                </div>
+                                <div class="cart-btns">
+                                    <a href="{% url 'produto:carrinho' %}">Ver Carrinho</a>
+                                    <a href="#">Pagar<i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Cart -->
+
+                        <!-- Menu Toggle -->
+                        <div class="menu-toggle">
+                            <a href="#">
+                                <i class="fa fa-bars"></i>
+                                <span>Menu</span>
+                            </a>
+                        </div>
+                        <!-- /Menu Toggle -->
+                    </div>
+                </div>
+                <!-- /ACCOUNT -->
+            </div>
+        </div>
+    </div>
+    <!-- /MAIN HEADER -->
+</header>
+<!-- /HEADER -->
+
+<!-- NAVIGATION -->
+<nav id="navigation">
+    <div class="container">
+        <div id="responsive-nav">
+            <ul class="main-nav nav navbar-nav">
+                <li class="active"><a href="{% url 'produto:index' %}">Home</a></li>
+                <li><a href="{% url 'produto:store' %}">Produtos</a></li>
+                <li><a href="#">Ofertas Especiais</a></li>
+                <li><a href="#">Lançamentos</a></li>
+                <li><a href="#">Fones de Ouvido</a></li>
+                <li><a href="#">Celulares & Smartphones</a></li>
+                <li><a href="#">Notebooks</a></li>
+                <li><a href="#">Acessórios</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
+<!-- /NAVIGATION -->
+
 
