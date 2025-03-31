@@ -11,17 +11,17 @@ from perfil.models import Perfil
 from .models import Category
 
 
-class store(ListView):
-    model = models.Produto
-    template_name = 'produto/store.html'
-    context_object_name = 'produtos'
-    paginate_by = 10
-    ordering = ['-id']
+# class store(ListView):
+#     model = models.Produto
+#     template_name = 'produto/store.html'
+#     context_object_name = 'produtos'
+#     paginate_by = 15
+#     ordering = ['-id']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['categories'] = Category.objects.all()
+#         return context
 
 class Index(ListView):
     model = models.Produto
@@ -38,7 +38,7 @@ class Index(ListView):
 
 class product(ListView):
     model = models.Produto
-    template_name = 'produto/product.html'
+    template_name = 'produto/detalhe1.html'
     context_object_name = 'produtos'
     paginate_by = 10
     ordering = ['-id']
@@ -64,7 +64,7 @@ class checkout(ListView):
 
 class ListaProdutos(ListView):
     model = models.Produto
-    template_name = 'produto/lista.html'
+    template_name = 'produto/store.html'
     context_object_name = 'produtos'
     paginate_by = 10
     ordering = ['-id']
