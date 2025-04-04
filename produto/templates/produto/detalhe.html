@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load omfilters %}
 
-{% block titulo %}Carrinho | {% endblock %}
+{% block titulo %}{{ produto.nome }} | {% endblock %}
 
 {% block conteudo %}
 
@@ -21,11 +21,11 @@
 				<div class="row">
 					<div class="col-md-12">
 						<ul class="breadcrumb-tree">
-							<li><a href="#">Home</a></li>
-							<li><a href="#">All Categories</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li><a href="#">Headphones</a></li>
-							<li class="active">Product name goes here</li>
+							<li><a href="{% url 'produto:lista' %}">Home</a></li>
+							{% if produto.category %}
+							<li><a href="#">{{ produto.category.name }}</a></li>
+							{% endif %}
+							<li class="active">{{ produto.nome }}</li>
 						</ul>
 					</div>
 				</div>
@@ -46,42 +46,38 @@
 
 					<div class="col-md-5 col-md-push-2">
 							<div id="product-main-img">
+									{% if produto.imagem %}
 									<div class="product-preview">
-											<img src="{% static 'img/product01.png' %}" alt="">
+											<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
 									</div>
-					
-									<div class="product-preview">
-											<img src="{% static 'img/product03.png' %}" alt="">
-									</div>
-					
-									<div class="product-preview">
-											<img src="{% static 'img/product06.png' %}" alt="">
-									</div>
-					
-									<div class="product-preview">
-											<img src="{% static 'img/product08.png' %}" alt="">
-									</div>
+									{% endif %}
+									
+									{% for variacao in variacoes %}
+										{% if variacao.imagem %}
+										<div class="product-preview" data-variacao-id="{{ variacao.id }}">
+												<img src="{{ variacao.imagem.url }}" alt="{{ variacao.nome }}">
+										</div>
+										{% endif %}
+									{% endfor %}
 							</div>
 					</div>
 					
 					<!-- Produts Exidos no canto da tela  -->
 					<div class="col-md-2 col-md-pull-5">
 							<div id="product-imgs">
+									{% if produto.imagem %}
 									<div class="product-preview">
-											<img src="{% static 'img/product01.png' %}" alt="">
+											<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
 									</div>
-					
-									<div class="product-preview">
-											<img src="{% static 'img/product03.png' %}" alt="">
-									</div>
-					
-									<div class="product-preview">
-											<img src="{% static 'img/product06.png' %}" alt="">
-									</div>
-					
-									<div class="product-preview">
-											<img src="{% static 'img/product08.png' %}" alt="">
-									</div>
+									{% endif %}
+									
+									{% for variacao in variacoes %}
+										{% if variacao.imagem %}
+										<div class="product-preview" data-variacao-id="{{ variacao.id }}">
+												<img src="{{ variacao.imagem.url }}" alt="{{ variacao.nome }}">
+										</div>
+										{% endif %}
+									{% endfor %}
 							</div>
 					</div>
 					
@@ -99,18 +95,18 @@
 												<i class="fa fa-star"></i>
 												<i class="fa fa-star-o"></i>
 										</div>
-										<a class="review-link" href="#">10 Review(s) | Add your review</a>
+										<a class="review-link" href="#tab3" data-toggle="tab">10 Review(s) | Add your review</a>
 								</div>
 								<div>
 										{% if produto.preco_marketing_promocional %}
-										<h3 class="product-price">
+										<h3 class="product-price" id="preco-produto">
 												{{ produto.preco_marketing_promocional|formata_preco }}
 												<del class="product-old-price">{{ produto.preco_marketing|formata_preco }}</del>
 										</h3>
 										{% else %}
-										<h3 class="product-price">{{ produto.preco_marketing|formata_preco }}</h3>
+										<h3 class="product-price" id="preco-produto">{{ produto.preco_marketing|formata_preco }}</h3>
 										{% endif %}
-										<span class="product-available">In Stock</span>
+										<span class="product-available" id="estoque-produto">Em estoque</span>
 								</div>
 								<p>{{ produto.descricao_curta }}</p>
 
@@ -118,23 +114,44 @@
 										<label>
 												Variações
 												<select id="select-variacoes" name="vid" class="input-select">
-														{% for variacao in produto.variacao_set.all %}
+														{% for variacao in variacoes %}
 																{% if variacao.preco_promocional %}
-																<option data-preco="{{ variacao.preco|formata_preco }}"
+																<option 
+																		data-preco="{{ variacao.preco|formata_preco }}"
 																		data-preco-promocional="{{ variacao.preco_promocional|formata_preco }}"
+																		data-estoque="{{ variacao.estoque }}"
+																		data-imagem="{{ variacao.imagem.url }}"
+																		data-cor="{{ variacao.cor }}"
+																		data-tamanho="{{ variacao.tamanho }}"
 																		value="{{ variacao.id }}">
 																		{% if variacao.nome %}
 																		{{ variacao.nome }}
 																		{% else %}
 																		{{ variacao }}
 																		{% endif %}
+																		{% if variacao.cor or variacao.tamanho %}
+																		({% if variacao.cor %}Cor: {{ variacao.cor }}{% endif %}
+																		{% if variacao.cor and variacao.tamanho %} - {% endif %}
+																		{% if variacao.tamanho %}Tamanho: {{ variacao.tamanho }}{% endif %})
+																		{% endif %}
 																</option>
 																{% else %}
-																<option data-preco="{{ variacao.preco|formata_preco }}" value="{{ variacao.id }}">
+																<option 
+																		data-preco="{{ variacao.preco|formata_preco }}"
+																		data-estoque="{{ variacao.estoque }}"
+																		{% comment %} data-imagem="{{ variacao.imagem.url }}" {% endcomment %}
+																		data-cor="{{ variacao.cor }}"
+																		data-tamanho="{{ variacao.tamanho }}"
+																		value="{{ variacao.id }}">
 																		{% if variacao.nome %}
 																		{{ variacao.nome }}
 																		{% else %}
 																		{{ variacao }}
+																		{% endif %}
+																		{% if variacao.cor or variacao.tamanho %}
+																		({% if variacao.cor %}Cor: {{ variacao.cor }}{% endif %}
+																		{% if variacao.cor and variacao.tamanho %} - {% endif %}
+																		{% if variacao.tamanho %}Tamanho: {{ variacao.tamanho }}{% endif %})
 																		{% endif %}
 																</option>
 																{% endif %}
@@ -143,13 +160,24 @@
 										</label>
 								</div>
 
+								{% if variacoes %}
+								<div class="product-options">
+										<div class="row" id="variacoes-cores-container">
+												<div class="col-md-12">
+														<p id="variacao-cor-display" class="mb-2"></p>
+														<p id="variacao-tamanho-display" class="mb-2"></p>
+												</div>
+										</div>
+								</div>
+								{% endif %}
+
 								<form action="{% url 'produto:adicionaraocarrinho' %}" id="form-add-to-cart">
-									<input type="hidden" name="vid" value="{{ produto.variacao_set.all.0.id }}">
+									<input type="hidden" name="vid" id="input-variacao-id" value="{{ variacoes.0.id }}">
 										<div class="add-to-cart">
 												<div class="qty-label">
-														Qts
+														Quantidade
 														<div class="input-number">
-																<input type="number" name="quantidade" value="1" min="1">
+																<input type="number" name="quantidade" value="1" min="1" max="{{ variacoes.0.estoque }}" id="input-quantidade">
 																<span class="qty-up">+</span>
 																<span class="qty-down">-</span>
 														</div>
@@ -159,14 +187,20 @@
 								</form>
 
 								<ul class="product-btns">
-										<li><a href="#"><i class="fa fa-heart-o"></i> adicionar à lista de desejos </a></li>
-										{% comment %} <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li> {% endcomment %}
+									<li>
+											<a href="#" class="favoritar" data-produto="{{ produto.id }}">
+													<i class="fa fa-heart"></i> Adicionar aos Favoritos
+											</a>
+									</li>
 								</ul>
-
+								
 								<ul class="product-links">
 										<li>Categoria:</li>
-										<li><a href="#">{{produto.category}}</a></li>
-										<li><a href="#">Eletronicos</a></li>
+										{% if produto.category %}
+										<li><a href="#">{{ produto.category.name }}</a></li>
+										{% else %}
+										<li><a href="#">Sem categoria</a></li>
+										{% endif %}
 								</ul>
 
 								<ul class="product-links">
@@ -198,7 +232,7 @@
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+											<p>{{ produto.descricao_longa|linebreaks }}</p>
 										</div>
 									</div>
 								</div>
@@ -208,7 +242,7 @@
 								<div id="tab2" class="tab-pane fade in">
 									<div class="row">
 										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+											<p>{{ produto.descricao_longa|linebreaks }}</p>
 										</div>
 									</div>
 								</div>
@@ -429,7 +463,7 @@
 										{% endif %}
 										<span class="new">NEW</span>
 								</div>
-						</div>
+							</div>
 							<div class="product-body">
 								<p class="product-category">
 									{% if produto.category %}
@@ -458,7 +492,7 @@
 								<a href="{% url 'produto:detalhe' produto.slug %}" class="add-to-cart-btn">
 										<i class="fa fa-shopping-cart"></i> Comprar
 								</a>
-						</div>
+							</div>
 						</div>
 					</div>
 					{% endfor %}
@@ -510,6 +544,73 @@
 </html>
 {% endblock %}
 
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+			const selectVariacoes = document.getElementById('select-variacoes');
+			const formAddToCart = document.getElementById('form-add-to-cart');
+			const inputVid = document.getElementById('input-variacao-id');
+			const inputQuantidade = document.getElementById('input-quantidade');
+			const precoDisplay = document.getElementById('preco-produto');
+			const estoqueDisplay = document.getElementById('estoque-produto');
+			const variacaoCorDisplay = document.getElementById('variacao-cor-display');
+			const variacaoTamanhoDisplay = document.getElementById('variacao-tamanho-display');
+			
+			// Inicializa os displays de cor e tamanho com a primeira variação
+			if (selectVariacoes && selectVariacoes.options.length > 0) {
+					const firstOption = selectVariacoes.options[0];
+					variacaoCorDisplay.textContent = `Cor: ${firstOption.getAttribute('data-cor') || 'N/A'}`;
+					variacaoTamanhoDisplay.textContent = `Tamanho: ${firstOption.getAttribute('data-tamanho') || 'N/A'}`;
+			}
+			// Atualiza o campo vid com a primeira variação selecionada
+			if (selectVariacoes.value) {
+					inputVid.value = selectVariacoes.value;
+			}
+			// Atualiza o campo vid quando o usuário seleciona uma nova variação			
+			selectVariacoes.addEventListener('change', function() {
+					const selectedOption = this.options[this.selectedIndex];
+					inputVid.value = this.value;
+					
+					// Atualiza o preço exibido quando a variação muda
+					const preco = selectedOption.getAttribute('data-preco');
+					const precoPromocional = selectedOption.getAttribute('data-preco-promocional');
+					
+					if (precoPromocional) {
+							precoDisplay.innerHTML = `${precoPromocional} <del class="product-old-price">${preco}</del>`;
+					} else {
+							precoDisplay.innerHTML = preco;
+					}
+					
+					// Atualiza o estoque exibido quando a variação muda
+					const estoque = selectedOption.getAttribute('data-estoque');
+					estoqueDisplay.textContent = `Em estoque: ${estoque}`;
+					
+					// Atualiza os displays de cor e tamanho
+					variacaoCorDisplay.textContent = `Cor: ${selectedOption.getAttribute('data-cor') || 'N/A'}`;
+					variacaoTamanhoDisplay.textContent = `Tamanho: ${selectedOption.getAttribute('data-tamanho') || 'N/A'}`;
+			});
+			// Atualiza o estoque máximo permitido no campo de quantidade
+			selectVariacoes.addEventListener('change', function() {
+					const selectedOption = this.options[this.selectedIndex];
+					const estoque = selectedOption.getAttribute('data-estoque');
+					inputQuantidade.setAttribute('max', estoque);
+					
+					// Reseta o valor do campo de quantidade para 1
+					inputQuantidade.value = 1;
+			});
+			// Atualiza o estoque máximo permitido no campo de quantidade ao carregar a página
+			const selectedOption = selectVariacoes.options[selectVariacoes.selectedIndex];
+			const estoque = selectedOption.getAttribute('data-estoque');
+			inputQuantidade.setAttribute('max', estoque);
+			inputQuantidade.value = 1;			
+	});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">		
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 			const selectVariacoes = document.getElementById('select-variacoes');

@@ -53,164 +53,8 @@
 		}
 </style>		
 		<!-- HEADER -->
-		<header>
-			<!-- TOP HEADER -->
-			<div id="top-header">
-				<div class="container">
-					<ul class="header-links pull-left">
-						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
-						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
-						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
-					</ul>
-					<ul class="header-links pull-right">
-						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-					</ul>
-				</div>
-			</div>
-			<!-- /TOP HEADER -->
+		{% include 'parciais/_nav.html' %}
 
-			<!-- MAIN HEADER -->
-			<div id="header">
-				<!-- container -->
-				<div class="container">
-					<!-- row -->
-					<div class="row">
-						<!-- LOGO -->
-						<div class="col-md-3">
-							<div class="header-logo">
-								<a href="#" class="logo">
-									<img src="./img/logo.png" alt="">
-								</a>
-							</div>
-						</div>
-						<!-- /LOGO -->
-
-						<!-- SEARCH BAR -->
-						<div class="col-md-6">
-							<div class="header-search">
-								<form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'produto:busca' %}">
-									<select class="input-select">
-										<option value="0">All Categories</option>
-										<option value="1">Category 01</option>
-										<option value="1">Category 02</option>
-									</select>
-									<input class="input" name="termo" value="{{ request.GET.termo }}" placeholder="Search here">
-									<button class="search-btn">Search</button>
-								</form>
-							</div>
-						</div>
-						<!-- /SEARCH BAR -->
-
-						<!-- ACCOUNT -->
-						<div class="col-md-3 clearfix">
-							<div class="header-ctn">
-								<!-- Wishlist -->
-								<div>
-									{% if request.session.carrinho %}
-									<a href="#">
-										<i class="fa fa-heart-o"></i>
-										<span>Carrinho</span>
-										<div class="qty">{{ request.session.carrinho|cart_total_qtd }}x</div>
-									</a>
-								</div>
-								{% endif %}
-								<!-- /Wishlist -->
-
-								<!-- Cart -->
-								 
-
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<i class="fa fa-shopping-cart"></i>
-										{% if request.session.carrinho %}
-										<span>Carrinho</span>
-										
-										<div class="qty">{{ request.session.carrinho|cart_total_qtd }}x</div>
-									</a>
-									<div class="cart-dropdown">
-										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{% static './img/product01.png'%}" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="./img/product02.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-										</div>
-										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
-										</div>
-										<div class="cart-btns">
-											<a href="{% url 'produto:carrinho' %}">Ver Carrinho</a>
-											<a href="#">Pagar<i class="fa fa-arrow-circle-right"></i></a>
-										</div>
-									</div>
-								</div>
-								{% endif %}
-								<!-- /Cart -->
-
-								<!-- Menu Toogle -->
-								<div class="menu-toggle">
-									<a href="#">
-										<i class="fa fa-bars"></i>
-										<span>Menu</span>
-									</a>
-								</div>
-								<!-- /Menu Toogle -->
-							</div>
-						</div>
-						<!-- /ACCOUNT -->
-					</div>
-					<!-- row -->
-				</div>
-				<!-- container -->
-			</div>
-			<!-- /MAIN HEADER -->
-		</header>
-		<!-- /HEADER -->
-
-		<!-- NAVIGATION -->
-		<nav id="navigation">
-			<!-- container -->
-			<div class="container">
-					<!-- responsive-nav -->
-					<div id="responsive-nav">
-							<!-- NAV -->
-							<ul class="main-nav nav navbar-nav">
-									<li class="active"><a href="#">Home</a></li>
-									<li><a href="#">Ofertas Especiais</a></li>
-									<li><a href="#">Lançamentos</a></li>
-									<li><a href="#">Fones de Ouvido</a></li>
-									<li><a href="#">Celulares & Smartphones</a></li>
-									<li><a href="#">Notebooks</a></li>
-									<li><a href="#">Acessórios</a></li>
-									<li><a href="#">Contato</a></li>
-							</ul>
-							<!-- /NAV -->
-					</div>
-					<!-- /responsive-nav -->
-			</div>
-			<!-- /container -->
-		</nav>
-		<!-- /NAVIGATION -->
-
-		<!-- SECTION -->
 
 		
 		<div class="section">
@@ -500,291 +344,203 @@
 		<div class="section">
 			<!-- container -->
 			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-4 col-xs-6">
-						<div class="section-title">
-							<h4 class="title">Top selling</h4>
-							<div class="section-nav">
-								<div id="slick-nav-3" class="products-slick-nav"></div>
+					<!-- row -->
+					<div class="row">
+							<div class="col-md-4 col-xs-6">
+									<div class="section-title">
+											<h4 class="title">Top Produtos</h4>
+											<div class="section-nav">
+													<div id="slick-nav-3" class="products-slick-nav"></div>
+											</div>
+									</div>
+
+									<div class="products-widget-slick" data-nav="#slick-nav-3">
+											<div>
+													<!-- product widget -->
+													{% for produto in produtos|slice:":3" %}
+													<div class="product-widget">
+															<div class="product-img">
+																	{% if produto.imagem %}
+																	<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+																	{% else %}
+																	<img src="./img/product07.png" alt="{{ produto.nome }}">
+																	{% endif %}
+															</div>
+															<div class="product-body">
+																	<p class="product-category">{{ produto.category.name|default:"Category" }}</p>
+																	<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+																	<h4 class="product-price">{{ produto.get_preco_formatado }} 
+																			{% if produto.preco_marketing_promocional > 0 %}
+																			<del class="product-old-price">{{ produto.get_preco_promocional_formatado }}</del>
+																			{% endif %}
+																	</h4>
+															</div>
+													</div>
+													{% endfor %}
+													<!-- /product widget -->
+											</div>
+
+											<div>
+													<!-- product widget -->
+													{% for produto in produtos|slice:"3:6" %}
+													<div class="product-widget">
+															<div class="product-img">
+																	{% if produto.imagem %}
+																	<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+																	{% else %}
+																	<img src="./img/product01.png" alt="{{ produto.nome }}">
+																	{% endif %}
+															</div>
+															<div class="product-body">
+																	<p class="product-category">{{ produto.category.name|default:"Category" }}</p>
+																	<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+																	<h4 class="product-price">{{ produto.get_preco_formatado }} 
+																			{% if produto.preco_marketing_promocional > 0 %}
+																			<del class="product-old-price">{{ produto.get_preco_promocional_formatado }}</del>
+																			{% endif %}
+																	</h4>
+															</div>
+													</div>
+													{% endfor %}
+													<!-- /product widget -->
+											</div>
+									</div>
 							</div>
-						</div>
 
-						<div class="products-widget-slick" data-nav="#slick-nav-3">
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product07.png" alt="">
+							<div class="col-md-4 col-xs-6">
+									<div class="section-title">
+											<h4 class="title">Mais vendidos</h4>
+											<div class="section-nav">
+													<div id="slick-nav-4" class="products-slick-nav"></div>
+											</div>
 									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
 
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product08.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
+									<div class="products-widget-slick" data-nav="#slick-nav-4">
+											<div>
+													<!-- product widget -->
+													{% for produto in produtos|slice:"6:9" %}
+													<div class="product-widget">
+															<div class="product-img">
+																	{% if produto.imagem %}
+																	<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+																	{% else %}
+																	<img src="./img/product04.png" alt="{{ produto.nome }}">
+																	{% endif %}
+															</div>
+															<div class="product-body">
+																	<p class="product-category">{{ produto.category.name|default:"Category" }}</p>
+																	<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+																	<h4 class="product-price">{{ produto.get_preco_formatado }} 
+																			{% if produto.preco_marketing_promocional > 0 %}
+																			<del class="product-old-price">{{ produto.get_preco_promocional_formatado }}</del>
+																			{% endif %}
+																	</h4>
+															</div>
+													</div>
+													{% endfor %}
+													<!-- /product widget -->
+											</div>
 
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product09.png" alt="">
+											<div>
+													<!-- product widget -->
+													{% for produto in produtos|slice:"9:12" %}
+													<div class="product-widget">
+															<div class="product-img">
+																	{% if produto.imagem %}
+																	<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+																	{% else %}
+																	<img src="./img/product07.png" alt="{{ produto.nome }}">
+																	{% endif %}
+															</div>
+															<div class="product-body">
+																	<p class="product-category">{{ produto.category.name|default:"Category" }}</p>
+																	<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+																	<h4 class="product-price">{{ produto.get_preco_formatado }} 
+																			{% if produto.preco_marketing_promocional > 0 %}
+																			<del class="product-old-price">{{ produto.get_preco_promocional_formatado }}</del>
+																			{% endif %}
+																	</h4>
+															</div>
+													</div>
+													{% endfor %}
+													<!-- /product widget -->
+											</div>
 									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- product widget -->
 							</div>
 
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product01.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
+							<div class="clearfix visible-sm visible-xs"></div>
 
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product02.png" alt="">
+							<div class="col-md-4 col-xs-6">
+									<div class="section-title">
+											<h4 class="title">Novidades</h4>
+											<div class="section-nav">
+													<div id="slick-nav-5" class="products-slick-nav"></div>
+											</div>
 									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
 
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product03.png" alt="">
+									<div class="products-widget-slick" data-nav="#slick-nav-5">
+											<div>
+													<!-- product widget -->
+													{% for categoria in categories|slice:":3" %}
+													{% with produto=categoria.produto_set.first %}
+													{% if produto %}
+													<div class="product-widget">
+															<div class="product-img">
+																	{% if produto.imagem %}
+																	<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+																	{% else %}
+																	<img src="./img/product01.png" alt="{{ produto.nome }}">
+																	{% endif %}
+															</div>
+															<div class="product-body">
+																	<p class="product-category">{{ produto.category }}</p>
+																	<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+																	<h4 class="product-price">{{ produto.get_preco_formatado }} 
+																			{% if produto.preco_marketing_promocional > 0 %}
+																			<del class="product-old-price">{{ produto.get_preco_promocional_formatado }}</del>
+																			{% endif %}
+																	</h4>
+															</div>
+													</div>
+													{% endif %}
+													{% endwith %}
+													{% endfor %}
+													<!-- /product widget -->
+											</div>
+
+											<div>
+													<!-- product widget -->
+													{% for categoria in categories|slice:"3:6" %}
+													{% with produto=categoria.produto_set.first %}
+													{% if produto %}
+													<div class="product-widget">
+															<div class="product-img">
+																	{% if produto.imagem %}
+																	<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+																	{% else %}
+																	<img src="./img/product04.png" alt="{{ produto.nome }}">
+																	{% endif %}
+															</div>
+															<div class="product-body">
+																	<p class="product-category">{{ produto.category }}</p>
+																	<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+																	<h4 class="product-price">{{ produto.get_preco_formatado }} 
+																			{% if produto.preco_marketing_promocional > 0 %}
+																			<del class="product-old-price">{{ produto.get_preco_promocional_formatado }}</del>
+																			{% endif %}
+																	</h4>
+															</div>
+													</div>
+													{% endif %}
+													{% endwith %}
+													{% endfor %}
+													<!-- /product widget -->
+											</div>
 									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- product widget -->
 							</div>
-						</div>
+
 					</div>
-
-					<div class="col-md-4 col-xs-6">
-						<div class="section-title">
-							<h4 class="title">Top selling</h4>
-							<div class="section-nav">
-								<div id="slick-nav-4" class="products-slick-nav"></div>
-							</div>
-						</div>
-
-						<div class="products-widget-slick" data-nav="#slick-nav-4">
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product04.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product05.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product06.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- product widget -->
-							</div>
-
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product07.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product08.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product09.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- product widget -->
-							</div>
-						</div>
-					</div>
-
-					<div class="clearfix visible-sm visible-xs"></div>
-
-					<div class="col-md-4 col-xs-6">
-						<div class="section-title">
-							<h4 class="title">Top selling</h4>
-							<div class="section-nav">
-								<div id="slick-nav-5" class="products-slick-nav"></div>
-							</div>
-						</div>
-
-						<div class="products-widget-slick" data-nav="#slick-nav-5">
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product01.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product02.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product03.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- product widget -->
-							</div>
-
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product04.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product05.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- /product widget -->
-
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/product06.png" alt="">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name"><a href="#">product name goes here</a></h3>
-										<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-									</div>
-								</div>
-								<!-- product widget -->
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<!-- /row -->
+					<!-- /row -->
 			</div>
 			<!-- /container -->
 		</div>

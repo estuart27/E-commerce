@@ -1,7 +1,6 @@
 {% load static %}
 {% load omfilters %}
 
-
 <!-- HEADER -->
 <header>
     <!-- TOP HEADER -->
@@ -39,12 +38,12 @@
                     <div class="header-search">
                         <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'produto:busca' %}">
                             <select class="input-select">
-                                <option value="0">All Categories</option>
-                                <option value="1">Category 01</option>
-                                <option value="1">Category 02</option>
+                                <option value="0">Busca</option>
                             </select>
-                            <input class="input" name="termo" value="{{ request.GET.termo }}" placeholder="Search here">
-                            <button class="search-btn">Search</button>
+                            <input class="input" name="termo" value="{{ request.GET.termo }}" placeholder="Procurar Produto">
+                            <button class="search-btn">
+                                <i class="fa fa-search"></i>  <!-- Ícone de lupa do Font Awesome -->
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -53,49 +52,129 @@
                 <!-- ACCOUNT -->
                 <div class="col-md-3 clearfix">
                     <div class="header-ctn">
-                        <!-- Wishlist -->
-                        <div>
-                            <a href="#">
-                                <i class="fa fa-heart-o"></i>
-                                <span>Favoritos</span>
-                                <div class="qty">2</div>
-                            </a>
-                        </div>
-                        <!-- /Wishlist -->
-
-                        <!-- Cart -->
                         <div class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                                {% if request.session.carrinho %}
-                                <i class="fa fa-shopping-cart"></i>
-                                <span>Carrinho</span>
-                                <div class="qty">{{ request.session.carrinho|cart_total_qtd }}x</div>
-                                {% endif %}
+                                <i class="fa fa-heart"></i>
+                                <span>Favoritos</span>
+                                <div class="qty">
+                                    {% if request.session.favoritos %}
+                                        {{ request.session.favoritos|length }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </div>
                             </a>
                             <div class="cart-dropdown">
                                 <div class="cart-list">
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="{% static 'img/product01.png' %}" alt="Produto">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">Nome do Produto</a></h3>
-                                            <h4 class="product-price"><span class="qty">1x</span> R$980,00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fa fa-close"></i></button>
-                                    </div>
+                                    {% if request.session.favoritos %}
+                                        {% for favorito in request.session.favoritos.values %}
+                                            <div class="product-widget">
+                                                <div class="product-img">
+                                                    <img src="{% get_media_prefix %}{{ favorito.imagem }}" alt="">
+                                                </div>
+                                                <div class="product-body">
+                                                    <h3 class="product-name">
+                                                        {% comment %} <a href="{% url 'produto:detalhe' favorito.slug %}">{{ favorito.produto_nome }}</a> {% endcomment %}
+                                                    </h3>
+                                                    <h4 class="product-price">
+                                                        {% if favorito.preco_unitario_promocional %}
+                                                            {{ favorito.preco_unitario_promocional|formata_preco }}
+                                                        {% else %}
+                                                            {{ favorito.preco_unitario|formata_preco }}
+                                                        {% endif %}
+                                                    </h4>
+                                                </div>
+                                                <button class="remover-favorito" data-produto="{{ favorito.produto_id }}">
+                                                    <i class="fa fa-close"></i>
+                                                </button>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Você ainda não favoritou nenhum produto.</p>
+                                    {% endif %}
                                 </div>
                                 <div class="cart-summary">
-                                    <small>3 Item(s) selecionados</small>
-                                    <h5>SUBTOTAL: R$2940,00</h5>
+                                    <small>
+                                        {% if request.session.favoritos %}
+                                            {{ request.session.favoritos|length }} Produto(s) Favoritado(s)
+                                        {% else %}
+                                            Nenhum item favoritado
+                                        {% endif %}
+                                    </small>
                                 </div>
                                 <div class="cart-btns">
-                                    <a href="{% url 'produto:carrinho' %}">Ver Carrinho</a>
-                                    <a href="#">Pagar<i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="{% url 'produto:favoritos' %}">Ver Favoritos</a>
                                 </div>
                             </div>
                         </div>
-                        <!-- /Cart -->
+                        <!-- /Wishlist (Favoritos) -->
+                        
+                
+                        <!-- Cart -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>Carrinho</span>
+                                <div class="qty">
+                                    {% if request.session.carrinho %}
+                                        {{ request.session.carrinho|cart_total_qtd }}x
+                                    {% else %}
+                                        0x
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="cart-dropdown">
+                                <div class="cart-list">
+                                    {% if request.session.carrinho %}
+                                        {% for linha in carrinho.values %}
+                                            <div class="product-widget">
+                                                <div class="product-img">
+                                                    <img src="{% get_media_prefix %}{{ linha.imagem }}" alt="">
+                                                </div>
+                                                <div class="product-body">
+                                                    <h3 class="product-name">
+                                                        <a href="{% url 'produto:detalhe' linha.slug %}">{{ linha.produto_nome }}</a>
+                                                    </h3>
+                                                    <h4 class="product-price">
+                                                        <span class="qty">{{ linha.quantidade }} x</span>
+                                                        {% if linha.preco_unitario_promocional %}
+                                                            {{ linha.preco_unitario_promocional|formata_preco }}
+                                                        {% else %}
+                                                            {{ linha.preco_unitario|formata_preco }}
+                                                        {% endif %}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Seu carrinho está vazio.</p>
+                                    {% endif %}
+                                </div>
+                                <div class="cart-summary">
+                                    <small>
+                                        {% if request.session.carrinho %}
+                                            {{ request.session.carrinho|cart_total_qtd }} Item(s) selecionado(s)
+                                        {% else %}
+                                            Nenhum item no carrinho
+                                        {% endif %}
+                                    </small>
+                                    <h5>SUBTOTAL: 
+                                        {% if request.session.carrinho %}
+                                            {{ carrinho|cart_totals|formata_preco }}
+                                        {% else %}
+                                            R$ 0,00
+                                        {% endif %}
+                                    </h5>
+                                </div>
+                                <div class="cart-btns">
+                                    <a href="{% url 'produto:carrinho' %}">Ver Carrinho</a>
+                                    <a href="#" {% if not request.session.carrinho %}style="pointer-events: none; opacity: 0.5;"{% endif %}>
+                                        Pagar <i class="fa fa-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Cart --> 
 
                         <!-- Menu Toggle -->
                         <div class="menu-toggle">
@@ -134,5 +213,23 @@
     </div>
 </nav>
 <!-- /NAVIGATION -->
-
-
+ <script>
+document.querySelectorAll('.remover-favorito').forEach(button => {
+    button.addEventListener('click', function() {
+        let produtoId = this.getAttribute('data-produto');
+        fetch("{% url 'produto:adicionar_favorito' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "produto_id=" + produtoId
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.mensagem);
+            location.reload();
+        });
+    });
+});
+</script>

@@ -18,6 +18,10 @@ urlpatterns = [
 #     path('store/', views.store.as_view(), name="store"),
      path('product/', views.product.as_view(), name="product"),
      path('checkout/', views.checkout.as_view(), name="blank"),
-
-
+     path('favoritos/', views.Favoritos.as_view(), name='favoritos'),
+    path('adicionar-favorito/', views.AdicionarFavorito.as_view(), name='adicionar_favorito'),
 ]
+
+
+
+

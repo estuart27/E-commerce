@@ -5,453 +5,316 @@
 {% block titulo %}Carrinho | {% endblock %}
 
 {% block conteudo %}
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-		 <style>
-			/* Adicione este CSS ao seu arquivo de estilo */
-		
-		/* Container para todos os produtos */
-		.products-container {
-			display: flex;
-			flex-wrap: wrap;
-		}
-		
-		/* Item de produto individual */
-		.product-item {
-			display: flex;
-			margin-bottom: 30px;
-		}
-		
-		/* Card do produto */
-		.product {
-			width: 100%;
-			height: 100%;
-			display: flex;
-			flex-direction: column;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s;
-		}
-		
-		.product:hover {
-			transform: translateY(-5px);
-		}
-		
-		/* Container da imagem */
-		.product-img {
-			position: relative;
-			width: 100%;
-			height: 250px; /* Altura fixa para todas as imagens */
-			overflow: hidden;
-		}
-		
-		/* Imagem do produto */
-		.product-image {
-			width: 100%;
-			height: 100%;
-			object-fit: cover; /* Isso mantém a proporção da imagem */
-		}
-		
-		/* Corpo do produto (informações) */
-		.product-body {
-			padding: 15px;
-			flex-grow: 1;
-		}
-		
-		/* Nome do produto */
-		.product-name {
-			height: 44px; /* Altura fixa para o nome do produto */
-			overflow: hidden;
-			margin-bottom: 10px;
-		}
-		
-		/* Botão de compra */
-		.add-to-cart {
-			margin-top: auto;
-		}
-		
-		.add-to-cart-btn {
-			display: block;
-			width: 100%;
-			padding: 10px;
-			text-align: center;
-			background-color: #D10024;
-			color: #FFF;
-			font-weight: 700;
-			text-transform: uppercase;
-			transition: 0.2s all;
-		}
-		
-		.add-to-cart-btn:hover {
-			background-color: #FFF;
-			color: #D10024;
-		}
-		</style>
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="{% url 'produto:index' %}">Home</a></li>
+                    <li><a href="#">Todas as categorias</a></li>
+                    <li class="active">Produtos  ({{ produtos.count }} Resultados)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
 
+<!-- SECTION -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                <!-- Categories Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Categories</h3>
+                    <div class="checkbox-filter">
+                        {% for category in categories %}
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="category-{{ category.id }}">
+                            <label for="category-{{ category.id }}">
+                                <span></span>
+                                {{ category.name }}
+                                <small>({{ category.produto_set.count }})</small>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-		<!-- BREADCRUMB -->
-		<div id="breadcrumb" class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-12">
-						<ul class="breadcrumb-tree">
-							<li><a href="#">Home</a></li>
-							<li><a href="#">All Categories</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li class="active">Headphones (227,490 Results)</li>
-						</ul>
-					</div>
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /BREADCRUMB -->
+                <!-- Price Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Price</h3>
+                    <div class="price-filter">
+                        <div id="price-slider"></div>
+                        <div class="input-number price-min">
+                            <input id="price-min" type="number">
+                            <span class="qty-up">+</span>
+                            <span class="qty-down">-</span>
+                        </div>
+                        <span>-</span>
+                        <div class="input-number price-max">
+                            <input id="price-max" type="number">
+                            <span class="qty-up">+</span>
+                            <span class="qty-down">-</span>
+                        </div>
+                    </div>
+                </div>
 
-		<!-- SECTION -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<!-- ASIDE -->
-					<div id="aside" class="col-md-3">
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Categories</h3>
-							<div class="checkbox-filter">
+                <!-- Brand Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Brand</h3>
+                    <div class="checkbox-filter">
+                        {% for tipo in tipos %}
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="tipo-{{ tipo.0 }}">
+                            <label for="tipo-{{ tipo.0 }}">
+                                <span></span>
+                                {{ tipo.1 }}
+                                <small>({{ tipo.count }})</small>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-1">
-									<label for="category-1">
-										<span></span>
-										Laptops
-										<small>(120)</small>
-									</label>
-								</div>
+                <!-- Top Selling Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Top selling</h3>
+                    {% for produto in produtos|dictsortreversed:"id"|slice:":3" %}
+                    <div class="product-widget">
+                        <div class="product-img">
+                            {% if produto.imagem %}
+                                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                            {% else %}
+                                <img src="{% static 'img/product-placeholder.png' %}" alt="{{ produto.nome }}">
+                            {% endif %}
+                        </div>
+                        <div class="product-body">
+                            <p class="product-category">{{ produto.category.name|default:"Category" }}</p>
+                            <h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+                            {% if produto.preco_marketing_promocional > 0 %}
+                                <h4 class="product-price">{{ produto.get_preco_promocional_formatado }} <del class="product-old-price">{{ produto.get_preco_formatado }}</del></h4>
+                            {% else %}
+                                <h4 class="product-price">{{ produto.get_preco_formatado }}</h4>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /ASIDE -->
 
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-2">
-									<label for="category-2">
-										<span></span>
-										Smartphones
-										<small>(740)</small>
-									</label>
-								</div>
+            <!-- STORE -->
+            <div id="store" class="col-md-9">
+                <!-- Store Top Filter -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <label>
+													Ordenar por:
+                            <select class="input-select">
+                                <option value="0">Popular</option>
+                                <option value="1">Posição</option>
+                            </select>
+                        </label>
 
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-3">
-									<label for="category-3">
-										<span></span>
-										Cameras
-										<small>(1450)</small>
-									</label>
-								</div>
+                        <label>
+                            Mostrar:
+                            <select class="input-select">
+                                <option value="0">10</option>
+                                {% comment %} <option value="1">20</option>
+                                <option value="2">50</option> {% endcomment %}
+                            </select>
+                        </label>
+                    </div>
+                    <ul class="store-grid">
+                        <li class="active"><i class="fa fa-th"></i></li>
+                        <li><a href="#"><i class="fa fa-th-list"></i></a></li>
+                    </ul>
+                </div>
+                <!-- /Store Top Filter -->
+                
+                <!-- Store Products -->
+                <div class="row">
+                    {% for produto in produtos %}
+                    <div class="col-md-4 col-xs-6">
+                        <div class="product">
+                            <div class="product-img">
+                                {% if produto.imagem %}
+                                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'img/product-placeholder.png' %}" alt="{{ produto.nome }}">
+                                {% endif %}
+                                {% if produto.preco_marketing_promocional > 0 %}
+                                    <div class="product-label">
+                                        <span class="sale">SALE</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="product-body">
+                                <p class="product-category">{{ produto.category.name|default:"Category" }}</p>
+                                <h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
+                                {% if produto.preco_marketing_promocional > 0 %}
+                                    <h4 class="product-price">{{ produto.get_preco_promocional_formatado }} <del class="product-old-price">{{ produto.get_preco_formatado }}</del></h4>
+                                {% else %}
+                                    <h4 class="product-price">{{ produto.get_preco_formatado }}</h4>
+                                {% endif %}
+                                <div class="product-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                                <div class="product-btns">
+                                    <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                    <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                                    <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                                </div>
+                            </div>
+                            
+                            <div class="add-to-cart">
+                                <a href="{% url 'produto:detalhe' produto.slug %}" class="add-to-cart-btn">
+                                    <i class="fa fa-shopping-cart"></i> Comprar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if forloop.counter|divisibleby:3 %}
+                        <div class="clearfix visible-lg visible-md"></div>
+                    {% endif %}
+                    {% if forloop.counter|divisibleby:2 %}
+                        <div class="clearfix visible-sm visible-xs"></div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- /Store Products -->
+                
+                <!-- Pagination -->
+                <div class="store-filter clearfix">
+                    <span class="store-qty">Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ paginator.count }} products</span>
+                    <ul class="store-pagination">
+                        {% if page_obj.has_previous %}
+                            <li><a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                        {% endif %}
+                        
+                        {% for num in paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="active">{{ num }}</li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li><a href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li><a href="?page={{ page_obj.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <!-- /Pagination -->
+            </div>
+            <!-- /STORE -->
+        </div>
+    </div>
+</div>
+<!-- /SECTION -->
 
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-4">
-									<label for="category-4">
-										<span></span>
-										Accessories
-										<small>(578)</small>
-									</label>
-								</div>
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /NEWSLETTER -->
 
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-5">
-									<label for="category-5">
-										<span></span>
-										Laptops
-										<small>(120)</small>
-									</label>
-								</div>
+<style>
+/* Product Grid Styles */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-								<div class="input-checkbox">
-									<input type="checkbox" id="category-6">
-									<label for="category-6">
-										<span></span>
-										Smartphones
-										<small>(740)</small>
-									</label>
-								</div>
-							</div>
-						</div>
-						<!-- /aside Widget -->
+.product-item {
+    display: flex;
+    margin-bottom: 30px;
+}
 
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Price</h3>
-							<div class="price-filter">
-								<div id="price-slider"></div>
-								<div class="input-number price-min">
-									<input id="price-min" type="number">
-									<span class="qty-up">+</span>
-									<span class="qty-down">-</span>
-								</div>
-								<span>-</span>
-								<div class="input-number price-max">
-									<input id="price-max" type="number">
-									<span class="qty-up">+</span>
-									<span class="qty-down">-</span>
-								</div>
-							</div>
-						</div>
-						<!-- /aside Widget -->
+.product {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
 
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Brand</h3>
-							<div class="checkbox-filter">
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-1">
-									<label for="brand-1">
-										<span></span>
-										SAMSUNG
-										<small>(578)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-2">
-									<label for="brand-2">
-										<span></span>
-										LG
-										<small>(125)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-3">
-									<label for="brand-3">
-										<span></span>
-										SONY
-										<small>(755)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-4">
-									<label for="brand-4">
-										<span></span>
-										SAMSUNG
-										<small>(578)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-5">
-									<label for="brand-5">
-										<span></span>
-										LG
-										<small>(125)</small>
-									</label>
-								</div>
-								<div class="input-checkbox">
-									<input type="checkbox" id="brand-6">
-									<label for="brand-6">
-										<span></span>
-										SONY
-										<small>(755)</small>
-									</label>
-								</div>
-							</div>
-						</div>
-						<!-- /aside Widget -->
+.product:hover {
+    transform: translateY(-5px);
+}
 
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Top selling</h3>
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="{% static 'img/product01.png' %}" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
+.product-img {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
 
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product02.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product03.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
-						</div>
-						<!-- /aside Widget -->
-					</div>
-					<!-- /ASIDE -->
+.product-body {
+    padding: 15px;
+    flex-grow: 1;
+}
 
-					<!-- STORE -->
-					<div id="store" class="col-md-9">
-						<!-- store top filter -->
-						<div class="store-filter clearfix">
-								<div class="store-sort">
-										<label>
-												Sort By:
-												<select class="input-select">
-														<option value="0">Popular</option>
-														<option value="1">Position</option>
-												</select>
-										</label>
+.product-name {
+    height: 44px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
 
-										<label>
-												Show:
-												<select class="input-select">
-														<option value="0">20</option>
-														<option value="1">50</option>
-												</select>
-										</label>
-								</div>
-								<ul class="store-grid">
-										<li class="active"><i class="fa fa-th"></i></li>
-										<li><a href="#"><i class="fa fa-th-list"></i></a></li>
-								</ul>
-						</div>
-						<!-- /store top filter -->
+.add-to-cart {
+    margin-top: auto;
+}
 
-						<!-- store products -->
-						<div class="row products-container">
-								<!-- product -->
-								{% for produto in produtos %}
-								<div class="col-md-4 col-xs-6 product-item">
-										<div class="product">
-												<div class="product-img">
-														{% if produto.imagem %}
-																<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="product-image">
-														{% endif %}
-														<div class="product-label">
-																{% if produto.preco_marketing_promocional %}
-																<span class="sale">-{{ produto.percentual_desconto }}%</span>
-																{% endif %}
-																<span class="new">NEW</span>
-														</div>
-												</div>
-												<div class="product-body">
-														{% if produto.category %}
-														<p class="product-category">{{produto.category}}</p>
-														{% else%}
-														<p class="product-category">Sem categoria</p>
-														{% endif %}
-														
-														<h3 class="product-name"><a href="{% url 'produto:detalhe' produto.slug %}">{{ produto.nome }}</a></h3>
-														
-														{% if produto.preco_marketing_promocional %}
-														<h4 class="product-price">{{ produto.preco_marketing_promocional|formata_preco }} 
-																<del class="product-old-price">{{ produto.preco_marketing|formata_preco }}</del>
-														</h4>
-														{% else %}
-														<h4 class="product-price">{{ produto.preco_marketing|formata_preco }}</h4>
-														{% endif %}
-														
-														<div class="product-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-														</div>
-														<div class="product-btns">
-																<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-																<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-																<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-														</div>
-												</div>
-												<div class="add-to-cart">
-														<a href="{% url 'produto:detalhe' produto.slug %}" class="add-to-cart-btn">
-																<i class="fa fa-shopping-cart"></i> Comprar
-														</a>
-												</div>
-										</div>
-								</div>
-								{% endfor %}
-						</div>
-						<!-- /store products -->
+.add-to-cart-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #D10024;
+    color: #FFF;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: 0.2s all;
+}
 
-						<!-- store bottom filter -->
-						{% load static %}
-
-						<div class="store-filter clearfix">
-								<span class="store-qty">
-										Mostrando {{ page_obj.start_index }}-{{ page_obj.end_index }} de {{ page_obj.paginator.count }} produtos
-								</span>
-								<ul class="store-pagination">
-										{% if page_obj.has_previous %}
-												<li><a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
-										{% endif %}
-										
-										{% for num in page_obj.paginator.page_range %}
-												<li class="{% if num == page_obj.number %}active{% endif %}">
-														<a href="?page={{ num }}">{{ num }}</a>
-												</li>
-										{% endfor %}
-						
-										{% if page_obj.has_next %}
-												<li><a href="?page={{ page_obj.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
-										{% endif %}
-								</ul>
-						</div>
-						<!-- /store bottom filter -->
-					</div>
-					<!-- /STORE -->
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		<!-- /SECTION -->
-
-		<!-- NEWSLETTER -->
-		<div id="newsletter" class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="newsletter">
-							<p>Sign Up for the <strong>NEWSLETTER</strong></p>
-							<form>
-								<input class="input" type="email" placeholder="Enter Your Email">
-								<button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
-							</form>
-							<ul class="newsletter-follow">
-								<li>
-									<a href="#"><i class="fa fa-facebook"></i></a>
-								</li>
-								<li>
-									<a href="#"><i class="fa fa-twitter"></i></a>
-								</li>
-								<li>
-									<a href="#"><i class="fa fa-instagram"></i></a>
-								</li>
-								<li>
-									<a href="#"><i class="fa fa-pinterest"></i></a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /NEWSLETTER -->
-
+.add-to-cart-btn:hover {
+    background-color: #FFF;
+    color: #D10024;
+}
+</style>
 {% endblock %}

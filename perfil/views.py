@@ -148,6 +148,7 @@ class Login(View):
     def post(self, *args, **kwargs):
         username = self.request.POST.get('username')
         password = self.request.POST.get('password')
+        
 
         if not username or not password:
             messages.error(

@@ -23,6 +23,26 @@ from .models import Category
 #         context['categories'] = Category.objects.all()
 #         return context
 
+# class Index(ListView):
+#     model = models.Produto
+#     template_name = 'produto/index.html'
+#     context_object_name = 'produtos'
+#     paginate_by = 10
+#     ordering = ['-id']
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['categories'] = Category.objects.all()
+#         return context
+    
+# class Carrinho(View):
+#     def get(self, *args, **kwargs):
+#         contexto = {
+#             'carrinho': self.request.session.get('carrinho', {})
+#         }
+
+#         return render(self.request, 'produto/carrinho.html', contexto)
+
 class Index(ListView):
     model = models.Produto
     template_name = 'produto/index.html'
@@ -33,6 +53,10 @@ class Index(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        # Adiciona o carrinho ao contexto
+        context['carrinho'] = self.request.session.get('carrinho', {})
+        context['favoritos'] = self.request.session.get('favoritos', {})  # Adiciona os favoritos  
+
         return context
     
 
@@ -58,6 +82,8 @@ class checkout(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['carrinho'] = self.request.session.get('carrinho', {})
+
         return context
 
 
@@ -72,6 +98,8 @@ class ListaProdutos(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['carrinho'] = self.request.session.get('carrinho', {})
+
         return context
 
 
@@ -95,6 +123,31 @@ class Busca(ListaProdutos):
         return qs
 
 
+# class DetalheProduto(DetailView):
+#     model = models.Produto
+#     template_name = 'produto/detalhe.html'
+#     context_object_name = 'produto'
+#     slug_url_kwarg = 'slug'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         produto_atual = self.get_object()
+        
+#         # Busca 4 produtos quaisquer (excluindo o produto atual)
+#         context['produtos'] = models.Produto.objects.exclude(
+#             id=produto_atual.id
+#         )[:4]  # Limita a 4 produtos
+        
+#         context['categories'] = Category.objects.all()
+#         context['carrinho'] = self.request.session.get('carrinho', {})
+
+#         return context
+
+from django.views.generic.detail import DetailView
+from . import models
+from .models import Category
+
+
 class DetalheProduto(DetailView):
     model = models.Produto
     template_name = 'produto/detalhe.html'
@@ -105,12 +158,42 @@ class DetalheProduto(DetailView):
         context = super().get_context_data(**kwargs)
         produto_atual = self.get_object()
         
-        # Busca 4 produtos quaisquer (excluindo o produto atual)
-        context['produtos'] = models.Produto.objects.exclude(
-            id=produto_atual.id
-        )[:4]  # Limita a 4 produtos
+        # Busca produtos relacionados (da mesma categoria, excluindo o atual)
+        produtos_relacionados = models.Produto.objects.filter(
+            category=produto_atual.category
+        ).exclude(id=produto_atual.id)[:4]
         
+        # Se não houver produtos suficientes na mesma categoria, complementa com outros
+        if len(produtos_relacionados) < 4:
+            outros_produtos = models.Produto.objects.exclude(
+                id=produto_atual.id
+            ).exclude(
+                id__in=[p.id for p in produtos_relacionados]
+            )[:4-len(produtos_relacionados)]
+            
+            context['produtos'] = list(produtos_relacionados) + list(outros_produtos)
+        else:
+            context['produtos'] = produtos_relacionados
+        
+        # Obtém todas as variações do produto, incluindo suas imagens
+        variacoes = models.Variacao.objects.filter(produto=produto_atual).order_by('nome')
+        context['variacoes'] = variacoes
+        
+        # Cria uma lista das imagens de todas as variações para o carrossel
+        imagens_variacoes = []
+        for variacao in variacoes:
+            if variacao.imagem:
+                imagens_variacoes.append(variacao.imagem.url)
+        
+        # Adiciona a imagem principal do produto se existir
+        if produto_atual.imagem:
+            if produto_atual.imagem.url not in imagens_variacoes:
+                imagens_variacoes.insert(0, produto_atual.imagem.url)
+        
+        context['imagens_produto'] = imagens_variacoes
         context['categories'] = Category.objects.all()
+        context['carrinho'] = self.request.session.get('carrinho', {})
+
         return context
 
 
@@ -225,6 +308,33 @@ class Carrinho(View):
         }
 
         return render(self.request, 'produto/carrinho.html', contexto)
+    
+
+
+class Favoritos(View):
+    def get(self, request, *args, **kwargs):
+        contexto = {
+            'favoritos': request.session.get('favoritos', {})
+        }
+        return render(request, 'produto/favoritos.html', contexto)
+
+
+from django.http import JsonResponse
+
+class AdicionarFavorito(View):
+    def post(self, request, *args, **kwargs):
+        produto_id = str(request.POST.get('produto_id'))  # ID do produto enviado via POST
+        favoritos = request.session.get('favoritos', {})
+
+        if produto_id in favoritos:
+            del favoritos[produto_id]  # Remove dos favoritos se já estiver lá
+            mensagem = "Removido dos favoritos"
+        else:
+            favoritos[produto_id] = {'produto_id': produto_id}
+            mensagem = "Adicionado aos favoritos"
+
+        request.session['favoritos'] = favoritos  # Atualiza a session
+        return JsonResponse({'mensagem': mensagem, 'favoritos_count': len(favoritos)})
 
 
 class ResumoDaCompra(View):
